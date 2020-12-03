@@ -10,8 +10,21 @@ import requests
 from bs4 import BeautifulSoup
 from fastapi.responses import PlainTextResponse
 from collections import Counter
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://127.0.0.1:8000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def result(res):
     return {"result":res}
@@ -61,23 +74,23 @@ async def work(text : str =""):
 
     return string_out
 
-@app.get("/CountWordnString",response_class=PlainTextResponse)
-async def CountWordnString(text : str ="Sample Text!", rng : str = "1,1" ):
-    string_out= ""
-    x = rng.split(',')
-    rng1 = int(x[0])
-    rng2 = int(x[1]) + 1
-    l = rng1
-    for l in range(rng1,rng2):
-        raw_list =[text[i:i+l] for i in range(0, len(text), l)]
-        result = Counter(raw_list)
-        x = sorted(result.items(),key=lambda item: item[1],reverse= True)
-        string_out += 'Range =' + str(l) +'\n'
-        for obj in x :
-            string_out += '"' + obj[0] + '"' + ' = ' + str(obj[1]) + '\n'
-    l += 1
+@app.get("/CountWordInString",response_class=PlainTextResponse)
+async def CountWordInString(InputText : str ="Sample Text!", CountRange : str = "1,1" ):
+    Result= ""
+    RangeList = CountRange.split(',')
+    InitialRange = int(RangeList[0])
+    LastRange = int(RangeList[1]) + 1
+    PresentRange = InitialRange
+    for PresentRange in range(InitialRange,LastRange):
+        RawList =[InputText[i:i+PresentRange] for i in range(0, len(InputText), PresentRange)]
+        CountedList = Counter(RawList)
+        SortedList = sorted(CountedList.items(),key=lambda item: item[1],reverse= True)
+        Result += 'Range =' + str(PresentRange) +'\n'
+        for SortedResult in SortedList :
+            Result += '"' + SortedResult[0] + '"' + ' = ' + str(SortedResult[1]) + '\n'
+    PresentRange += 1
     
-    return string_out
+    return Result
 
 @app.get("/pow")
 async def pow(a: int = 0, b: int = 0):
