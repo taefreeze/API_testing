@@ -48,7 +48,7 @@ async def mul(a: int = 0, b: int = 0):
     return a*b
 
 
-@app.get("/work", response_class=PlainTextResponse)
+@app.get("/work")
 async def work(text: str = ""):
     # remove lead and ending space
     # text.strip()
@@ -73,9 +73,9 @@ async def work(text: str = ""):
         string_out += obj[0] + ' = ' + str(obj[1]) + '\n'
 
     #result = [item for items, c in Counter(char_frequency).most_common() for item in [items] * c]
-    #jsonout =  {'char' : sorted(char_frequency.items())} #,key=lambda item: item[1], reverse= True }
+    jsonout =  {'char' : sorted(char_frequency.items(),key=lambda item: item[1], reverse= True) }
 
-    return string_out
+    return jsonout
 
 
 @app.get("/CountWordInString", response_class=PlainTextResponse)
