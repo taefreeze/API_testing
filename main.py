@@ -14,13 +14,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-origins = [
-    "http://127.0.0.1:8000"
-]
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,7 +68,7 @@ async def work(text : str =""):
         string_out += obj[0] + ' = ' + str(obj[1]) +'\n'
     
     #result = [item for items, c in Counter(char_frequency).most_common() for item in [items] * c]
-    #jsonout =  {'char' : sorted(char_frequency.items())} #,key=lambda item: item[1], reverse= True
+    #jsonout =  {'char' : sorted(char_frequency.items())} #,key=lambda item: item[1], reverse= True }
 
     return string_out
 
